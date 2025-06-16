@@ -3,6 +3,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:async/async.dart';
 
+import '../models/contact.dart';
+
 // Definição dos nomes das colunas que serão usadas no banco de dados
 final String contactTable = "contactTable";
 final String idColumn = "idColumn";
@@ -19,15 +21,13 @@ class ContactHelper {
 
   ContactHelper.internal();
 
-  late Database _db;
+  Database? _db;
 
   Future<Database> get db async {
-    if (_db != null) {
-      return _db;
-    } else {
-      _db = await initDb();
-      return _db;
-    }
+    // Se _db não for nulo, retorna o valor existente.
+    // Se for nulo, inicializa o banco de dados e atribui à variável.
+    _db ??= await initDb();
+    return _db!; // Agora temos certeza que _db não é nulo
   }
 
   Future<Database> initDb() async {
@@ -98,43 +98,4 @@ class ContactHelper {
 
 }
 
-// Classe modelo que representa um contato
-class Contact {
-  // Atributos do contato
-  late int id;
-  late String name;
-  late String email;
-  late String phone;
-  late String img;
 
-  // Construtor que cria um objeto Contact a partir de um Map (vindo do banco de dados)
-  Contact.fromMap(Map map) {
-    id = map[idColumn];
-    name = map[nameColumn];
-    email = map[emailColumn];
-    phone = map[phoneColumn];
-    img = map[imgColumn];
-  }
-
-  // Método que converte o objeto Contact em um Map (para salvar no banco)
-  Map<String,dynamic> toMap() {
-    Map<String, dynamic> map = {
-      nameColumn: name,
-      emailColumn: email,
-      phoneColumn: phone,
-      imgColumn: img,
-    };
-
-    // Adiciona o id ao Map apenas se ele já foi definido
-    if (id != null) {
-      map[idColumn] = id;
-    }
-    return map;
-  }
-
-  // Método que retorna uma string representando o contato (útil para debug)
-  @override
-  String toString() {
-    return "Contact(id $id, name: $name, email: $email, phone: $phone, img: $img)";
-  }
-}
