@@ -3,11 +3,11 @@ import '../helpers/contact_helper.dart';
 
 class Contact {
   // Atributos do contato
-  late int id;
-  late String name;
-  late String email;
-  late String phone;
-  late String img;
+  int? id;
+  String? name;
+  String? email;
+  String? phone;
+  String? img;
 
   Contact();
 
